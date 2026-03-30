@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.battleship.controller.GameController" stylesheets="@../css/style.css" styleClass="root-pane">
+    
+    <top>
+        <VBox alignment="CENTER" spacing="10" styleClass="header-box">
+            <Label text="Bataille Navale – Battleship" styleClass="title-label"/>
+            <HBox alignment="CENTER" spacing="50">
+                <Label fx:id="playerShipsLabel" text="Player Ships Remaining: 5" styleClass="info-label"/>
+                <Label fx:id="enemyShipsLabel" text="Enemy Ships Remaining: 5" styleClass="info-label"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <HBox alignment="CENTER" spacing="40" styleClass="boards-container">
+            <VBox alignment="CENTER" spacing="10">
+                <Label text="Player's Fleet / Flotte du Joueur" styleClass="board-title"/>
+                <GridPane fx:id="playerGrid" styleClass="board-grid"/>
+            </VBox>
+            
+            <VBox alignment="CENTER" spacing="10">
+                <Label text="Enemy Waters / Eaux Ennemies" styleClass="board-title"/>
+                <GridPane fx:id="enemyGrid" styleClass="board-grid"/>
+            </VBox>
+        </HBox>
+    </center>
+
+    <bottom>
+        <VBox alignment="CENTER" spacing="15" styleClass="footer-box">
+            <Label fx:id="statusLabel" text="Place your ships / Placez vos navires!" styleClass="status-label"/>
+        </VBox>
+    </bottom>
+
+    <right>
+        <VBox alignment="TOP_CENTER" spacing="20" styleClass="sidebar">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+            <Label text="Ship Placement" styleClass="sidebar-title"/>
+            
+            <ListView fx:id="shipListView" prefHeight="200" prefWidth="250" styleClass="ship-list"/>
+            
+            <Button fx:id="toggleOrientationBtn" text="Toggle Orientation: Horizontal" onAction="#handleToggleOrientation" prefWidth="250" styleClass="action-btn"/>
+            <Button fx:id="autoPlaceBtn" text="Randomly Auto Place / Placement Auto" onAction="#handleAutoPlace" prefWidth="250" styleClass="action-btn"/>
+            
+            <Region VBox.vgrow="ALWAYS"/>
+            
+            <Button fx:id="startGameBtn" text="Start Game / Démarrer" disable="true" onAction="#handleStartGame" prefWidth="250" styleClass="action-btn, start-btn"/>
+            <Button fx:id="newGameBtn" text="Restart / Recommencer" onAction="#handleNewGame" prefWidth="250" styleClass="action-btn"/>
+        </VBox>
+    </right>
+
+</BorderPane>
