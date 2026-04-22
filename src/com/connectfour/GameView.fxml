@@ -23,9 +23,9 @@
    <center>
       <StackPane fx:id="gameArea">
          <children>
-            <Pane fx:id="discRoot" prefWidth="560.0" prefHeight="480.0" />
+            <Pane fx:id="discRoot" prefWidth="560.0" prefHeight="480.0" maxWidth="560.0" maxHeight="480.0" />
             
-            <GridPane fx:id="boardGrid" prefWidth="560.0" prefHeight="480.0" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);">
+            <GridPane fx:id="boardGrid" prefWidth="560.0" prefHeight="480.0" maxWidth="560.0" maxHeight="480.0" style="-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);">
                <Region GridPane.columnIndex="0" GridPane.rowIndex="0" prefWidth="80" prefHeight="80" style="-fx-background-color: #2980b9; -fx-shape: 'M 0 0 h 80 v 80 h -80 v -80 Z M 40 8 a 32 32 0 1 0 0.0001 0 Z';" />
                <Region GridPane.columnIndex="1" GridPane.rowIndex="0" prefWidth="80" prefHeight="80" style="-fx-background-color: #2980b9; -fx-shape: 'M 0 0 h 80 v 80 h -80 v -80 Z M 40 8 a 32 32 0 1 0 0.0001 0 Z';" />
                <Region GridPane.columnIndex="2" GridPane.rowIndex="0" prefWidth="80" prefHeight="80" style="-fx-background-color: #2980b9; -fx-shape: 'M 0 0 h 80 v 80 h -80 v -80 Z M 40 8 a 32 32 0 1 0 0.0001 0 Z';" />
@@ -70,7 +70,7 @@
                <Region GridPane.columnIndex="6" GridPane.rowIndex="5" prefWidth="80" prefHeight="80" style="-fx-background-color: #2980b9; -fx-shape: 'M 0 0 h 80 v 80 h -80 v -80 Z M 40 8 a 32 32 0 1 0 0.0001 0 Z';" />
             </GridPane>
 
-            <GridPane fx:id="clickGrid" prefWidth="560.0" prefHeight="480.0">
+            <GridPane fx:id="clickGrid" prefWidth="560.0" prefHeight="480.0" maxWidth="560.0" maxHeight="480.0">
                <Pane GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.rowSpan="6" prefWidth="80" prefHeight="480" style="-fx-cursor: hand;" onMouseClicked="#handleColumnClick" onMouseEntered="#handleColumnHover" onMouseExited="#handleColumnExit" userData="0" />
                <Pane GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.rowSpan="6" prefWidth="80" prefHeight="480" style="-fx-cursor: hand;" onMouseClicked="#handleColumnClick" onMouseEntered="#handleColumnHover" onMouseExited="#handleColumnExit" userData="1" />
                <Pane GridPane.columnIndex="2" GridPane.rowIndex="0" GridPane.rowSpan="6" prefWidth="80" prefHeight="480" style="-fx-cursor: hand;" onMouseClicked="#handleColumnClick" onMouseEntered="#handleColumnHover" onMouseExited="#handleColumnExit" userData="2" />
