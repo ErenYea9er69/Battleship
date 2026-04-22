@@ -8,12 +8,15 @@ $srcFiles = Get-ChildItem -Path "src" -Filter "*.java" -Recurse | Select-Object 
 
 Write-Host "Compiling Java files..." -ForegroundColor Cyan
 # Compile using JavaFX modules
-javac --module-path "javafx-sdk\lib" --add-modules javafx.controls -d bin $srcFiles
+javac --module-path "javafx-sdk\lib" --add-modules javafx.controls,javafx.fxml -d bin $srcFiles
 
 if ($LASTEXITCODE -eq 0) {
+    Write-Host "Copying FXML resources..." -ForegroundColor Cyan
+    Copy-Item -Path "src\com\connectfour\*.fxml" -Destination "bin\com\connectfour\" -Force
+    
     Write-Host "Compilation successful. Launching Connect Four..." -ForegroundColor Green
     # Run application
-    java --module-path "javafx-sdk\lib" --add-modules javafx.controls -cp bin com.connectfour.Main
+    java --module-path "javafx-sdk\lib" --add-modules javafx.controls,javafx.fxml -cp bin com.connectfour.Main
 } else {
     Write-Host "Compilation failed." -ForegroundColor Red
 }

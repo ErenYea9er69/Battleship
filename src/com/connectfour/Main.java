@@ -7,9 +7,9 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
     @Override
-    public void start(Stage primaryStage) {
-        GameController controller = new GameController();
-        Scene scene = new Scene(controller.getRootPane(), 600, 600);
+    public void start(Stage primaryStage) throws Exception {
+        javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("GameView.fxml"));
+        Scene scene = new Scene(loader.load(), 600, 600);
         
         primaryStage.setTitle("Connect Four");
         primaryStage.setScene(scene);

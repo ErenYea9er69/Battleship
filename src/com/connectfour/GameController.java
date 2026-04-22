@@ -1,8 +1,18 @@
 package com.connectfour;
 
 import javafx.animation.TranslateTransition;
+import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
+import javafx.util.Duration;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
@@ -26,9 +36,9 @@ public class GameController {
     private static final int ROWS = 6;
     
     // UI components
-    private BorderPane root;
-    private Pane discRoot;
-    private Label statusLabel;
+    @FXML private Label statusLabel;
+    @FXML private StackPane gameArea;
+    @FXML private Pane discRoot;
     
     private Board gameBoard;
     // To track active discs so we can clear them on reset
@@ -39,92 +49,43 @@ public class GameController {
     public GameController() {
         gameBoard = new Board();
         placedDiscs = new ArrayList<>();
-        createUI();
     }
 
-    private void createUI() {
-        root = new BorderPane();
-        root.setStyle("-fx-background-color: #2b2b2b;");
+    @FXML
+    public void initialize() {
+        // Initialization if required
+    }
+    
+    @FXML
+    public void handleColumnHover(javafx.scene.input.MouseEvent event) {
+        Pane source = (Pane) event.getSource();
+        if (!gameBoard.isGameOver() && !isAnimating) {
+            source.setStyle("-fx-cursor: hand; -fx-background-color: rgba(255, 255, 255, 0.1);");
+        }
+    }
 
-        // Top Header
-        statusLabel = new Label("Player 1's Turn (Red)");
-        statusLabel.setTextFill(Color.web("#e74c3c"));
-        statusLabel.setFont(Font.font("Segoe UI", FontWeight.BOLD, 24));
-        HBox topBox = new HBox(statusLabel);
-        topBox.setAlignment(Pos.CENTER);
-        topBox.setStyle("-fx-padding: 20px;");
-        root.setTop(topBox);
+    @FXML
+    public void handleColumnExit(javafx.scene.input.MouseEvent event) {
+        Pane source = (Pane) event.getSource();
+        source.setStyle("-fx-cursor: hand; -fx-background-color: transparent;");
+    }
 
-        // Game Area
-        StackPane gameArea = new StackPane();
-        gameArea.setStyle("-fx-background-color: transparent;");
-
-        discRoot = new Pane();
-        discRoot.setPrefSize(COLUMNS * TILE_SIZE, ROWS * TILE_SIZE);
+    @FXML
+    public void handleColumnClick(javafx.scene.input.MouseEvent event) {
+        if (gameBoard.isGameOver() || isAnimating) return;
+        Pane source = (Pane) event.getSource();
+        int col = Integer.parseInt(source.getUserData().toString());
         
-        Shape boardOverlay = createBoardOverlay();
-        boardOverlay.setFill(Color.web("#2980b9"));
-        // Add subtle shadow or styling
-        boardOverlay.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);");
-
-        Pane clickHandlers = createClickHandlers();
-
-        gameArea.getChildren().addAll(discRoot, boardOverlay, clickHandlers);
-        // Force dimensions
-        gameArea.setMaxSize(COLUMNS * TILE_SIZE, ROWS * TILE_SIZE);
-
-        root.setCenter(gameArea);
-        BorderPane.setAlignment(gameArea, Pos.CENTER);
-    }
-
-    private Shape createBoardOverlay() {
-        Shape boardShape = new Rectangle(COLUMNS * TILE_SIZE, ROWS * TILE_SIZE);
-
-        for (int r = 0; r < ROWS; r++) {
-            for (int c = 0; c < COLUMNS; c++) {
-                // Determine center of each circle hole
-                double cx = c * TILE_SIZE + TILE_SIZE / 2.0;
-                double cy = r * TILE_SIZE + TILE_SIZE / 2.0;
-                Circle circleHole = new Circle(cx, cy, TILE_SIZE / 2.5); // Slightly smaller than half tile
-                boardShape = Shape.subtract(boardShape, circleHole);
-            }
+        int row = gameBoard.dropDisc(col);
+        if (row != -1) {
+            isAnimating = true;
+            // Reset hover
+            source.setStyle("-fx-cursor: hand; -fx-background-color: transparent;");
+            placeDiscVisual(row, col);
         }
-        return boardShape;
     }
 
-    private Pane createClickHandlers() {
-        Pane clickPane = new Pane();
-        for (int c = 0; c < COLUMNS; c++) {
-            Rectangle rect = new Rectangle(TILE_SIZE, ROWS * TILE_SIZE);
-            rect.setX(c * TILE_SIZE);
-            rect.setFill(Color.TRANSPARENT);
 
-            // Hover effects
-            rect.setOnMouseEntered(e -> {
-                if (!gameBoard.isGameOver() && !isAnimating) {
-                    rect.setFill(Color.rgb(255, 255, 255, 0.1));
-                }
-            });
-            rect.setOnMouseExited(e -> rect.setFill(Color.TRANSPARENT));
-
-            // Drop logic
-            final int col = c;
-            rect.setOnMouseClicked(e -> {
-                if (gameBoard.isGameOver() || isAnimating) return;
-                
-                int row = gameBoard.dropDisc(col);
-                if (row != -1) {
-                    isAnimating = true;
-                    // Reset hover
-                    rect.setFill(Color.TRANSPARENT);
-                    placeDiscVisual(row, col);
-                }
-            });
-
-            clickPane.getChildren().add(rect);
-        }
-        return clickPane;
-    }
 
     private void placeDiscVisual(int row, int col) {
         Circle disc = new Circle(TILE_SIZE / 2.5);
@@ -182,23 +143,25 @@ public class GameController {
         statusLabel.setText(message);
         statusLabel.setTextFill(Color.WHITE);
 
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Game Over");
-        alert.setHeaderText(null);
-        alert.setContentText(message + "\nDo you want to play again?");
-        
-        ButtonType playAgain = new ButtonType("Play Again");
-        ButtonType quit = new ButtonType("Quit");
-        alert.getButtonTypes().setAll(playAgain, quit);
+        javafx.application.Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Game Over");
+            alert.setHeaderText(null);
+            alert.setContentText(message + "\nDo you want to play again?");
+            
+            ButtonType playAgain = new ButtonType("Play Again");
+            ButtonType quit = new ButtonType("Quit");
+            alert.getButtonTypes().setAll(playAgain, quit);
 
-        alert.showAndWait().ifPresent(res -> {
-            if (res == playAgain) {
-                resetGame();
-            } else {
-                System.exit(0);
-            }
+            alert.showAndWait().ifPresent(res -> {
+                if (res == playAgain) {
+                    resetGame();
+                } else {
+                    System.exit(0);
+                }
+            });
+            isAnimating = false;
         });
-        isAnimating = false;
     }
 
     private void resetGame() {
@@ -206,9 +169,5 @@ public class GameController {
         discRoot.getChildren().removeAll(placedDiscs);
         placedDiscs.clear();
         updateTurnLabel();
-    }
-
-    public BorderPane getRootPane() {
-        return root;
     }
 }
