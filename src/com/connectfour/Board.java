@@ -6,7 +6,6 @@ public class Board {
     public static final int EMPTY = 0;
 
     private int[][] grid;
-    // 1 for Player 1 (Red), 2 for Player 2 (Yellow)
     private int currentPlayer;
     private boolean gameOver;
 
@@ -23,36 +22,25 @@ public class Board {
                 grid[row][col] = EMPTY;
             }
         }
-        currentPlayer = 1; // Player 1 starts
+        currentPlayer = 1; 
         gameOver = false;
     }
 
-    /**
-     * Drops a disc into the designated column.
-     * @param col The column index (0 to COLUMNS-1).
-     * @return The row where the disc lands, or -1 if the column is full.
-     */
     public int dropDisc(int col) {
         if (gameOver || col < 0 || col >= COLUMNS) {
             return -1;
         }
 
-        // Start from the bottom-most row and find the first empty slot
         for (int row = ROWS - 1; row >= 0; row--) {
             if (grid[row][col] == EMPTY) {
                 grid[row][col] = currentPlayer;
                 return row;
             }
         }
-        return -1; // Column full
+        return -1; 
     }
 
-    /**
-     * Checks if the most recent move at (row, col) resulted in a win.
-     * @param checkRow The row of the last placed disc.
-     * @param checkCol The column of the last placed disc.
-     * @return true if the current player won, false otherwise.
-     */
+ 
     public boolean checkWin(int checkRow, int checkCol) {
         int player = grid[checkRow][checkCol];
         if (player == EMPTY) return false;
@@ -66,7 +54,6 @@ public class Board {
     private boolean checkDirection(int row, int col, int player, int deltaRow, int deltaCol) {
         int count = 1;
 
-        // Check one way
         int r = row + deltaRow;
         int c = col + deltaCol;
         while (r >= 0 && r < ROWS && c >= 0 && c < COLUMNS && grid[r][c] == player) {
@@ -75,7 +62,6 @@ public class Board {
             c += deltaCol;
         }
 
-        // Check the opposite way
         r = row - deltaRow;
         c = col - deltaCol;
         while (r >= 0 && r < ROWS && c >= 0 && c < COLUMNS && grid[r][c] == player) {

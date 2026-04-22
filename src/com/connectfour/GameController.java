@@ -35,15 +35,12 @@ public class GameController {
     private static final int COLUMNS = 7;
     private static final int ROWS = 6;
     
-    // UI components
     @FXML private Label statusLabel;
     @FXML private StackPane gameArea;
     @FXML private Pane discRoot;
     
     private Board gameBoard;
-    // To track active discs so we can clear them on reset
     private List<Circle> placedDiscs;
-    // Prevent multiple animations from breaking state
     private boolean isAnimating = false;
 
     public GameController() {
@@ -53,7 +50,6 @@ public class GameController {
 
     @FXML
     public void initialize() {
-        // Initialization if required
     }
     
     @FXML
@@ -79,7 +75,6 @@ public class GameController {
         int row = gameBoard.dropDisc(col);
         if (row != -1) {
             isAnimating = true;
-            // Reset hover
             source.setStyle("-fx-cursor: hand; -fx-background-color: transparent;");
             placeDiscVisual(row, col);
         }
@@ -90,21 +85,18 @@ public class GameController {
     private void placeDiscVisual(int row, int col) {
         Circle disc = new Circle(TILE_SIZE / 2.5);
         disc.setCenterX(col * TILE_SIZE + TILE_SIZE / 2.0);
-        // Start above the board
         disc.setCenterY(-TILE_SIZE / 2.0); 
 
-        // Player colors
         int player = gameBoard.getCurrentPlayer();
         if (player == 1) {
-            disc.setFill(Color.web("#e74c3c")); // Red
+            disc.setFill(Color.web("#e74c3c"));
         } else {
-            disc.setFill(Color.web("#f1c40f")); // Yellow
+            disc.setFill(Color.web("#f1c40f"));
         }
         
         discRoot.getChildren().add(disc);
         placedDiscs.add(disc);
 
-        // End position
         double endY = row * TILE_SIZE + TILE_SIZE / 2.0;
         double travelDistance = endY - disc.getCenterY();
 
