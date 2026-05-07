@@ -45,10 +45,10 @@ public class Board {
         int player = grid[checkRow][checkCol];
         if (player == EMPTY) return false;
 
-        return checkDirection(checkRow, checkCol, player, 0, 1) ||  // Horizontal
-               checkDirection(checkRow, checkCol, player, 1, 0) ||  // Vertical
-               checkDirection(checkRow, checkCol, player, 1, 1) ||  // Diagonal down-right
-               checkDirection(checkRow, checkCol, player, 1, -1);   // Diagonal up-right
+        return checkDirection(checkRow, checkCol, player, 0, 1) ||
+               checkDirection(checkRow, checkCol, player, 1, 0) ||  
+               checkDirection(checkRow, checkCol, player, 1, 1) || 
+               checkDirection(checkRow, checkCol, player, 1, -1);   
     }
 
     private boolean checkDirection(int row, int col, int player, int deltaRow, int deltaCol) {
